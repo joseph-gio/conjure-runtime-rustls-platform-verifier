@@ -7,6 +7,7 @@ use conjure_runtime_raw::service::proxy::{ProxyConfig};
 use conjure_runtime_raw::service::timeout::{TimeoutLayer};
 use conjure_runtime_raw::service::tls_metrics::{TlsMetricsLayer};
 use conjure_runtime_raw::raw::{HTTP_KEEPALIVE, TCP_KEEPALIVE};
+use conjure_runtime_raw::raw::DefaultRawClient;
 use conjure_error::Error;
 use hyper_rustls::{HttpsConnectorBuilder};
 use hyper_util::client::legacy::connect::HttpConnector;
@@ -16,8 +17,6 @@ use rustls::ClientConfig;
 use rustls::crypto::ring;
 use rustls_platform_verifier::BuilderVerifierExt;
 use tower_layer::Layer;
-
-pub use conjure_runtime_raw::raw::DefaultRawClient;
 
 #[derive(Copy, Clone)]
 pub struct RawClientBuilder;
