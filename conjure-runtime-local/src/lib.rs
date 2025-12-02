@@ -188,38 +188,13 @@
 //! [`Balanced`]: NodeSelectionStrategy::Balanced
 //! [`MetricRegistry`]: witchcraft_metrics::MetricRegistry
 
-use crate::body::*;
-#[doc(inline)]
-use crate::builder::{
-    Builder, ClientQos, Idempotency, NodeSelectionStrategy, ServerQos, ServiceError,
-};
-use crate::client::*;
-#[doc(inline)]
-use crate::client_factory::ClientFactory;
-use crate::host_metrics::*;
-#[doc(inline)]
-use crate::per_host_clients::{Host, PerHostClients};
-use crate::user_agent::*;
-
-mod blocking;
-mod body;
-mod builder;
-mod client;
-mod client_factory;
-mod errors;
-mod host_metrics;
-mod per_host_clients;
 pub mod raw;
-mod rng;
 pub mod service;
-mod user_agent;
-mod util;
-mod weak_cache;
 
 /// Client configuration.
 ///
 /// This is just a reexport of the `conjure_runtime_config` crate for convenience.
-pub mod config {
+mod config {
     #[doc(inline)]
     pub use conjure_runtime_config::*;
 }

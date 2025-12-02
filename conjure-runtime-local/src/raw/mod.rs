@@ -33,54 +33,6 @@
 //!
 //! [`conjure_runtime::Client`]: crate::Client
 //! [`AsyncBody`]: conjure_http::client::AsyncBody
-use crate::builder;
-pub use crate::raw::body::*;
 pub use crate::raw::default::*;
-use crate::Builder;
-use conjure_error::Error;
-use std::future::Future;
-use std::sync::Arc;
 
-mod body;
 mod default;
-
-/// An asynchronous function from request to response.
-///
-/// This trait is based on the `tower::Service` trait, but differs in two ways. It does not have a `poll_ready` method
-/// as our client-side backpressure depends on the request, and the `call` method takes `&self` rather than `&mut self`
-/// as our client is designed to be used through a shared reference.
-pub trait Service<R> {
-    /// The response type returned by the service.
-    type Response;
-    /// The error type returned by the service.
-    type Error;
-
-    /// Asynchronously perform the request.
-    fn call(&self, req: R) -> impl Future<Output = Result<Self::Response, Self::Error>> + Send;
-}
-
-impl<R, T> Service<R> for Arc<T>
-where
-    T: ?Sized + Service<R>,
-{
-    type Response = T::Response;
-    type Error = T::Error;
-
-    fn call(&self, req: R) -> impl Future<Output = Result<T::Response, T::Error>> {
-        (**self).call(req)
-    }
-}
-
-/// A factory of raw HTTP clients.
-pub trait BuildRawClient {
-    /// The raw client type.
-    type RawClient;
-
-    /// Creates a new raw client.
-    fn build_raw_client(
-        &self,
-        builder: &Builder<builder::Complete<Self>>,
-    ) -> Result<Self::RawClient, Error>
-    where
-        Self: Sized;
-}

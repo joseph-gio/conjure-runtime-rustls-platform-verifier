@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 use crate::config;
-pub use crate::service::proxy::connector::ProxyConnectorService;
-pub use crate::service::proxy::request::ProxyLayer;
+pub(crate) use crate::service::proxy::connector::ProxyConnectorService;
 use base64::display::Base64Display;
 use base64::engine::general_purpose::STANDARD;
 use conjure_error::Error;
@@ -21,7 +20,6 @@ use http::{HeaderValue, Uri};
 use std::convert::TryFrom;
 
 pub mod connector;
-pub mod request;
 
 #[derive(Clone)]
 pub enum ProxyConfig {
