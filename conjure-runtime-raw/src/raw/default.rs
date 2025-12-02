@@ -11,12 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-use conjure_runtime_real::raw::{BuildRawClient, RawBody, Service};
+use conjure_runtime::raw::{BuildRawClient, RawBody, Service};
 use crate::service::proxy::connector::ProxyConnectorLayer;
 use crate::service::proxy::{ProxyConfig, ProxyConnectorService};
 use crate::service::timeout::{TimeoutLayer, TimeoutService};
 use crate::service::tls_metrics::{TlsMetricsLayer, TlsMetricsService};
-use conjure_runtime_real::{builder, Builder};
+use conjure_runtime::{builder, Builder};
 use bytes::Bytes;
 use conjure_error::Error;
 use http::{Request, Response};

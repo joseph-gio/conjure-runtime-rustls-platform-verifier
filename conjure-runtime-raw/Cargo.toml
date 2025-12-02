@@ -11,7 +11,7 @@
 
 [package]
 edition = "2018"
-name = "conjure-runtime"
+name = "conjure-runtime-raw"
 version = "6.2.0"
 authors = ["Steven Fackler <sfackler@palantir.com>"]
 build = false
@@ -27,12 +27,11 @@ repository = "https://github.com/palantir/conjure-rust-runtime"
 resolver = "2"
 
 [lib]
-name = "conjure_runtime"
+name = "conjure_runtime_raw"
 path = "src/lib.rs"
 
-[dependencies.conjure-runtime-real]
-package = "conjure-runtime"
-version = "6"
+[dependencies.conjure-runtime]
+workspace = true
 
 [dependencies.arc-swap]
 version = "1.0"

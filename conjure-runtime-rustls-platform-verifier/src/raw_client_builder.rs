@@ -2,11 +2,11 @@ use std::sync::Arc;
 
 use conjure_runtime::raw::{BuildRawClient};
 use conjure_runtime::{builder, Builder};
-use conjure_runtime_local::service::proxy::connector::ProxyConnectorLayer;
-use conjure_runtime_local::service::proxy::{ProxyConfig};
-use conjure_runtime_local::service::timeout::{TimeoutLayer};
-use conjure_runtime_local::service::tls_metrics::{TlsMetricsLayer};
-use conjure_runtime_local::raw::{HTTP_KEEPALIVE, TCP_KEEPALIVE};
+use conjure_runtime_raw::service::proxy::connector::ProxyConnectorLayer;
+use conjure_runtime_raw::service::proxy::{ProxyConfig};
+use conjure_runtime_raw::service::timeout::{TimeoutLayer};
+use conjure_runtime_raw::service::tls_metrics::{TlsMetricsLayer};
+use conjure_runtime_raw::raw::{HTTP_KEEPALIVE, TCP_KEEPALIVE};
 use conjure_error::Error;
 use hyper_rustls::{HttpsConnectorBuilder};
 use hyper_util::client::legacy::connect::HttpConnector;
@@ -17,7 +17,7 @@ use rustls::crypto::ring;
 use rustls_platform_verifier::BuilderVerifierExt;
 use tower_layer::Layer;
 
-pub use conjure_runtime_local::raw::DefaultRawClient;
+pub use conjure_runtime_raw::raw::DefaultRawClient;
 
 #[derive(Copy, Clone)]
 pub struct RawClientBuilder;
@@ -52,8 +52,8 @@ impl BuildRawClient for RawClientBuilder {
             builder.get_security().key_file(),
         ) {
             (Some(cert_file), Some(key_file)) => {
-                let cert_chain = conjure_runtime_local::raw::load_certs_file(cert_file)?;
-                let private_key = conjure_runtime_local::raw::load_private_key(key_file)?;
+                let cert_chain = conjure_runtime_raw::raw::load_certs_file(cert_file)?;
+                let private_key = conjure_runtime_raw::raw::load_private_key(key_file)?;
 
                 client_config
                     .with_client_auth_cert(cert_chain, private_key)

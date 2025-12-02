@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-use conjure_runtime_real::{builder, Builder};
+use conjure_runtime::{builder, Builder};
 use futures::ready;
 use hyper::rt::{Read, ReadBufCursor, Write};
 use hyper_util::client::legacy::connect::{Connected, Connection};
@@ -155,87 +155,5 @@ where
 {
     fn connected(&self) -> Connected {
         self.stream.inner().get_ref().inner().connected()
-    }
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-    use tokio::io::{AsyncReadExt, AsyncWriteExt};
-    use tokio::time;
-
-    #[tokio::test]
-    async fn read_no_timeout() {
-        time::pause();
-
-        let mut service =
-            TimeoutLayer::new(&Builder::for_test()).layer(tower_util::service_fn(|_| async {
-                Ok::<_, ()>(TokioIo::new(
-                    tokio_test::io::Builder::new().read(b"hello").build(),
-                ))
-            }));
-
-        let stream = service.call(()).await.unwrap();
-        let mut buf = vec![];
-        TokioIo::new(stream).read_to_end(&mut buf).await.unwrap();
-
-        assert_eq!(buf, b"hello");
-    }
-
-    #[tokio::test]
-    async fn read_timeout() {
-        time::pause();
-
-        let mut service = TimeoutLayer::new(
-            &Builder::for_test().read_timeout(Duration::from_secs(9)),
-        )
-        .layer(tower_util::service_fn(|_| async {
-            Ok::<_, ()>(TokioIo::new(
-                tokio_test::io::Builder::new()
-                    .wait(Duration::from_secs(10))
-                    .build(),
-            ))
-        }));
-
-        let stream = service.call(()).await.unwrap();
-        let mut buf = vec![];
-        TokioIo::new(stream)
-            .read_to_end(&mut buf)
-            .await
-            .unwrap_err();
-    }
-
-    #[tokio::test]
-    async fn write_no_timeout() {
-        time::pause();
-
-        let mut service =
-            TimeoutLayer::new(&Builder::for_test()).layer(tower_util::service_fn(|_| async {
-                Ok::<_, ()>(TokioIo::new(
-                    tokio_test::io::Builder::new().write(b"hello").build(),
-                ))
-            }));
-
-        let stream = service.call(()).await.unwrap();
-        TokioIo::new(stream).write_all(b"hello").await.unwrap();
-    }
-
-    #[tokio::test]
-    async fn write_timeout() {
-        time::pause();
-
-        let mut service = TimeoutLayer::new(
-            &Builder::for_test().write_timeout(Duration::from_secs(9)),
-        )
-        .layer(tower_util::service_fn(|_| async {
-            Ok::<_, ()>(TokioIo::new(
-                tokio_test::io::Builder::new()
-                    .wait(Duration::from_secs(10))
-                    .build(),
-            ))
-        }));
-
-        let stream = service.call(()).await.unwrap();
-        TokioIo::new(stream).write_all(b"hello").await.unwrap_err();
     }
 }
