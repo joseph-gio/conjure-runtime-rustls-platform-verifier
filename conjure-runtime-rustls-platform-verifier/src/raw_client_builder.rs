@@ -1,17 +1,17 @@
 use std::sync::Arc;
 
-use conjure_runtime::raw::{BuildRawClient};
-use conjure_runtime::{builder, Builder};
-use conjure_runtime_raw::service::proxy::connector::ProxyConnectorLayer;
-use conjure_runtime_raw::service::proxy::{ProxyConfig};
-use conjure_runtime_raw::service::timeout::{TimeoutLayer};
-use conjure_runtime_raw::service::tls_metrics::{TlsMetricsLayer};
-use conjure_runtime_raw::raw::{HTTP_KEEPALIVE, TCP_KEEPALIVE};
-use conjure_runtime_raw::raw::DefaultRawClient;
 use conjure_error::Error;
-use hyper_rustls::{HttpsConnectorBuilder};
-use hyper_util::client::legacy::connect::HttpConnector;
+use conjure_runtime::raw::BuildRawClient;
+use conjure_runtime::{Builder, builder};
+use conjure_runtime_raw::raw::DefaultRawClient;
+use conjure_runtime_raw::raw::{HTTP_KEEPALIVE, TCP_KEEPALIVE};
+use conjure_runtime_raw::service::proxy::ProxyConfig;
+use conjure_runtime_raw::service::proxy::connector::ProxyConnectorLayer;
+use conjure_runtime_raw::service::timeout::TimeoutLayer;
+use conjure_runtime_raw::service::tls_metrics::TlsMetricsLayer;
+use hyper_rustls::HttpsConnectorBuilder;
 use hyper_util::client::legacy::Client;
+use hyper_util::client::legacy::connect::HttpConnector;
 use hyper_util::rt::{TokioExecutor, TokioTimer};
 use rustls::ClientConfig;
 use rustls::crypto::ring;
@@ -83,4 +83,3 @@ impl BuildRawClient for RawClientBuilder {
         Ok(DefaultRawClient(client))
     }
 }
-
