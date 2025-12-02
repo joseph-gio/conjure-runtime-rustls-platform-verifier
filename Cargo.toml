@@ -1,0 +1,30 @@
+[package]
+name = "conjure-runtime-rustls-platform-verifier"
+version = "0.1.0"
+edition = "2024"
+readme = "README.md"
+
+[dependencies]
+rustls-platform-verifier = "0.6"
+conjure-runtime = "6"
+conjure-runtime-local = { package = "conjure-runtime", path = "./conjure-runtime-local" }
+conjure-error = "4"
+hyper-rustls = { version = "0.27", features = ["rustls-platform-verifier"], default-features = false }
+hyper-util = { version = "0.1", features = [
+    "http1",
+    "http2",
+    "client",
+    "client-legacy",
+    "tokio",
+] }
+tower-layer = "0.3"
+
+[dependencies.rustls]
+version = "0.23"
+features = [
+    "ring",
+    "logging",
+    "std",
+    "tls12",
+]
+default-features = false
