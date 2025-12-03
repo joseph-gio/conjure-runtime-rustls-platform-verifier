@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use conjure_error::Error;
 use conjure_runtime::raw::BuildRawClient;
 use conjure_runtime::{Builder, builder};
@@ -14,7 +12,6 @@ use hyper_util::client::legacy::Client;
 use hyper_util::client::legacy::connect::HttpConnector;
 use hyper_util::rt::{TokioExecutor, TokioTimer};
 use rustls::ClientConfig;
-use rustls::crypto::ring;
 use rustls_platform_verifier::BuilderVerifierExt;
 use tower_layer::Layer;
 
@@ -40,11 +37,12 @@ impl BuildRawClient for RawClientBuilder {
         let connector = TimeoutLayer::new(builder).layer(connector);
         let connector = ProxyConnectorLayer::new(&proxy).layer(connector);
 
-        let client_config = ClientConfig::builder_with_provider(Arc::new(ring::default_provider()))
-            .with_safe_default_protocol_versions()
-            .map_err(Error::internal_safe)?
-            .with_platform_verifier()
-            .map_err(Error::internal_safe)?;
+        let client_config =
+            ClientConfig::builder_with_provider(crate::crypto::ring_crypto_provider().clone())
+                .with_safe_default_protocol_versions()
+                .map_err(Error::internal_safe)?
+                .with_platform_verifier()
+                .map_err(Error::internal_safe)?;
 
         let client_config = match (
             builder.get_security().cert_file(),
