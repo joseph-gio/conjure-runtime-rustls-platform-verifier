@@ -4,6 +4,7 @@ pub mod conjure_runtime_raw {
 }
 
 pub use conjure_runtime;
+pub use rustls_platform_verifier;
 
 mod raw_client_builder;
 
